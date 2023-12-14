@@ -1,4 +1,4 @@
-import { type ActionFunction, json } from "@remix-run/node";
+import { type ActionFunction, json, defer } from "@remix-run/node";
 import { useLoaderData, useSubmit } from "@remix-run/react";
 import runCmd from "~/utils/runCmd";
 import {
@@ -11,6 +11,8 @@ import Header from "~/components/Header";
 import Pods from "~/components/Pods";
 import sanatize from "~/utils/sanatize";
 import useHandleActionData from "~/components/elements/useHandleAction";
+import { StreamResult } from "~/components/elements/stream";
+import { Loader } from "~/components/elements/Loading";
 
 export type Context = {
   namespace: string;
@@ -20,21 +22,11 @@ export type Context = {
 };
 
 export const loader = async () => {
-  const [contextsString, namespacesString] = (
-    await Promise.allSettled([
-      runCmd("kubectl config get-contexts"),
-      runCmd("kubectl describe ns"),
-    ])
-  ).map((resolved) => {
-    if (resolved.status === "rejected") {
-      console.error(resolved.reason);
-    }
-    return resolved.status === "fulfilled" ? resolved.value : "";
-  });
-
-  return json({
-    contexts: parseContextTable(contextsString),
-    namespaces: parseNamespaceList(namespacesString),
+  return defer({
+    contexts: await runCmd("kubectl config get-contexts").then(
+      parseContextTable
+    ),
+    namespaces: runCmd("kubectl describe ns").then(parseNamespaceList),
   });
 };
 
@@ -70,7 +62,11 @@ export default function Index() {
       <div className="w-full flex justify-center mt-20">
         <div className="w-5/6">
           <Contexts contexts={contexts} setActive={setActive} />
-          <Pods namespaces={namespaces} />
+          <StreamResult
+            defererd={namespaces}
+            View={({ data }) => <Pods namespaces={data} />}
+            Loader={() => <Loader isLoading />}
+          />
         </div>
       </div>
     </div>
