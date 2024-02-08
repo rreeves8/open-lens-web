@@ -1,8 +1,11 @@
 {
-  "name": "open-lens-custom",
+  "name": "openlens",
   "private": true,
   "sideEffects": false,
   "type": "module",
+  "bin":{
+    "dev": "npm run dev"
+  },
   "scripts": {
     "build": "remix build",
     "dev": "remix dev --manual",

@@ -26,7 +26,9 @@ export const loader = async () => {
     contexts: await runCmd("kubectl config get-contexts").then(
       parseContextTable
     ),
-    namespaces: runCmd("kubectl describe ns").then(parseNamespaceList),
+    namespaces: runCmd("kubectl describe ns")
+      .then(parseNamespaceList)
+      .catch((error) => []),
   });
 };
 

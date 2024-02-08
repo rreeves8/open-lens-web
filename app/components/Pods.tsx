@@ -7,14 +7,14 @@ export default function Pods({ namespaces }: { namespaces: Array<string> }) {
         <h2>Pods</h2>
       </article>
       <div className="flex flex-row w-full items-start">
-        <ul className="menu bg-base-200 w-56 rounded-box">
+        <ul className="menu bg-base-200 w-56 rounded-box ">
           {namespaces.map((namespace, i) => (
             <li key={i}>
               <Link to={"/pods?ns=" + namespace}>{namespace}</Link>
             </li>
           ))}
         </ul>
-        <div>
+        <div className="flex-1">
           <Outlet />
         </div>
       </div>

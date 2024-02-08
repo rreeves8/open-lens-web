@@ -1,13 +1,5 @@
 import { Context } from "~/routes";
 
-export const Terminal = ({ text }: { text: string }) => {
-  return (
-    <div className="terminal">
-      <div className="terminal__line">{text}</div>
-    </div>
-  );
-};
-
 export const TerminalTable = ({
   text,
   setActive,

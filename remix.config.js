@@ -9,7 +9,9 @@ export default {
   routes: async (defineRoutes) => {
     return defineRoutes((route) => {
       route("/", "routes/index.tsx", () => {
-        route("/pods", "routes/pods.tsx");
+        route("/pods", "routes/pods.tsx", () => {
+          route("/pods/logs", "routes/logs.tsx");
+        });
       });
     });
   },
