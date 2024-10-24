@@ -9,7 +9,5 @@ export default function deepEquailty(
 
   if (!keysMatch) return false;
 
-  console.log(keysMatch,  keys1.every((key) => obj1[key] === obj2[key]));
-
   return keys1.every((key) => obj1[key] === obj2[key]);
 }
